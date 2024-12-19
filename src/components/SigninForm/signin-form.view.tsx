@@ -13,7 +13,7 @@ import { Label } from "@radix-ui/react-label";
 import { SigninFormViewProps } from "./signin-form.types";
 
 export const SigninFormView = ({ model }: SigninFormViewProps) => {
-  const { formAction, formState } = model;
+  const { formAction, formState, isPending } = model;
 
   return (
     <form action={formAction} noValidate>
@@ -47,8 +47,11 @@ export const SigninFormView = ({ model }: SigninFormViewProps) => {
         </CardContent>
 
         <CardFooter>
-          <Button className="w-full bg-red-500 rounded-md hover:bg-red-600 active:bg-red-800">
-            Login
+          <Button
+            disabled={isPending}
+            className="w-full bg-red-500 rounded-md hover:bg-red-600 active:bg-red-800 disabled:opacity-50"
+          >
+            {isPending ? "Enviando..." : "Login"}
           </Button>
         </CardFooter>
       </Card>

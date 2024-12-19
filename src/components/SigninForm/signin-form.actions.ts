@@ -4,6 +4,7 @@ import {
   FormFieldsValidationException,
   validateFormFields,
 } from "@/helpers/form-validation";
+import { createClient } from "@/utils/supabase/server";
 import { SIGNIN_FORM_SCHEMA } from "./signin-form.schema";
 import { SigninFormData, SigninFormValidations } from "./signin-form.types";
 
@@ -11,6 +12,7 @@ export async function signinUser(
   _prevState: SigninFormValidations,
   formData: FormData,
 ): Promise<SigninFormValidations> {
+  const supabase = await createClient();
   const formDataEmail = formData.get("email") as string;
 
   try {
@@ -19,11 +21,24 @@ export async function signinUser(
       SIGNIN_FORM_SCHEMA,
     );
 
-    console.log("login realizado com sucesso", email);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
 
     return {
       ok: true,
-      message: "Login efetuado com sucesso",
+      message:
+        "Um email foi enviado para sua caixa de mensagens. Acesse e clique no link de login.",
+      data: {
+        email: "",
+      },
     };
   } catch (error: unknown) {
     if (error instanceof FormFieldsValidationException) {
@@ -37,8 +52,7 @@ export async function signinUser(
 
     return {
       ok: false,
-      message:
-        "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
+      message: (error as Error).message,
       data: {
         email: formDataEmail,
       },

@@ -1,9 +1,11 @@
 "use client";
 
+import { supabaseSignOut } from "@/actions/supabase-logout";
 import { Text } from "@/components/ui/text";
 import { cn } from "@/lib/utils";
 import { Loader } from "lucide-react";
 import { useFormStatus } from "react-dom";
+import { Button } from "../ui/button";
 import { SignupFormProps } from "./signup-form.types";
 
 /**
@@ -32,6 +34,7 @@ export const SignupForm = (props: SignupFormProps) => {
       <Text as="h1" size="lg">
         Cadastro de novo usuário
       </Text>
+      <Button onClick={supabaseSignOut}>Sair</Button>
 
       <div className="flex flex-col gap-2">
         <input
