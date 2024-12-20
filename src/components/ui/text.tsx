@@ -8,7 +8,7 @@ type TextProps<T extends React.ElementType> = {
 } & React.ComponentPropsWithoutRef<T> &
   VariantProps<typeof textVariants>;
 
-const textVariants = cva("text-sm font-medium leading-6 text-foreground", {
+const textVariants = cva("text-sm font-medium leading-6 text-inherit", {
   variants: {
     size: {
       default: "text-base",
